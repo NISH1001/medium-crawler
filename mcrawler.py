@@ -4,7 +4,7 @@
 import argparse
 
 from link_fetcher import LinkFetcher
-from postutils import save_posts, save_post_as_text
+from postutils import save_posts, save_post_as_text, save_post_as_json, create_dir
 
 import requests
 import unicodedata
@@ -61,11 +61,45 @@ class MediumCrawler:
             'content' : content
         }
 
-def main():
-    crawler = MediumCrawler(username='nishparadox')
-    # posts = [ post for post in crawler.crawl_lazily() ]
+def parse():
+    parser = argparse.ArgumentParser(
+        "mcrawler",
+        description="Craw shit from medium"
+    )
+    parser.add_argument(
+        '-u',
+        '--user',
+        # dest='user',
+        help='The username for medium',
+        required=True
+    )
+    parser.add_argument(
+        '-t',
+        '--type',
+        # dest='type',
+        help='The format for dumping -> text, json',
+        required=True
+    )
+    parser.add_argument(
+        '-dd',
+        '--dump-dir',
+        # dest='dump_dir',
+        help='The directory where the data is to be dumped',
+        required=True
+    )
+    return parser.parse_args()
+
+def run(args):
+    print("Crawling for user :: {}".format(username))
+    crawler = MediumCrawler(username=args.user)
+    dfunc = save_post_as_text if args.type == 'text' else save_post_as_json
+    create_dir(args.dump_dir)
     for post in crawler.crawl_lazily():
-        save_post_as_text(post, dir="data/")
+        dfunc(post, args.dump_dir)
+
+def main():
+    args = parse()
+    run(args)
 
 if __name__ == "__main__":
     main()

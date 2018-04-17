@@ -2,9 +2,13 @@
 
 
 import json
+import os
 import re
 import textwrap
 
+def create_dir(dirname):
+    if not os.path.exists(dirname):
+        os.makedirs(dirname)
 
 def save_post_as_text(post, dir="data/"):
     fname = dir + post['timestamp'] + '-' + re.sub(r'\s+', '-', post['title'])
@@ -29,7 +33,6 @@ def save_posts(posts, dir="data/", dump_type='text'):
     func = save_post_as_text if dump_type=='text' else save_post_as_json
     for post in posts:
         func(post, dir)
-
 
 
 def main():
