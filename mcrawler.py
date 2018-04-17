@@ -89,13 +89,16 @@ def parse():
     )
     return parser.parse_args()
 
-def run(args):
+def run_crawler(username, dump_type, dump_dir):
     print("Crawling for user :: {}".format(username))
-    crawler = MediumCrawler(username=args.user)
-    dfunc = save_post_as_text if args.type == 'text' else save_post_as_json
-    create_dir(args.dump_dir)
+    crawler = MediumCrawler(username=username)
+    dfunc = save_post_as_text if dump_type == 'text' else save_post_as_json
+    create_dir(dump_dir)
     for post in crawler.crawl_lazily():
-        dfunc(post, args.dump_dir)
+        dfunc(post, dump_dir)
+
+def run(args):
+    run_crawler(args.user, args.type, args.dump_dir)
 
 def main():
     args = parse()
