@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 
+import re
 import requests
 import time
 
@@ -19,6 +20,7 @@ class LinkFetcher:
             raise ValueError("Invalid username")
         self.username = username
         self.url = "https://medium.com/@{}/latest".format(username)
+        self.driver_type = driver_type
         if driver_type == 'headless':
             options = Options()
             options.set_headless(headless=True)
@@ -55,22 +57,21 @@ class LinkFetcher:
             Parse to get the actual links to the posts
         """
         soup = BeautifulSoup(html, 'html.parser')
-        # class_name = 'postArticle-content'
         class_name = 'streamItem streamItem--postPreview js-streamItem'
         divs = soup.find_all('div', {'class' : class_name})
         links = []
+        regex = re.compile('Read More', re.IGNORECASE)
         for div in divs:
-            anchors = div.find_all('a', href=True)
-            anchor = anchors[2]
-            links.append(anchor['href'])
+            anchors = div.find_all('a', href=True, text=regex)
+            if anchors:
+                links.append(anchors[0]['href'])
         return links
 
     def get_links(self):
+        print("Using driver type :: {}".format(self.driver_type))
         self.driver.get(self.url)
         h = self._scroll_to_oblivion()
-        links = self._parse(self.driver.page_source)
-        return links
-
+        return self._parse(self.driver.page_source)
 
 
 def main():
