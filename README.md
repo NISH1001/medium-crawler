@@ -14,9 +14,23 @@ Install using `requirements.txt`:
 pip install -r requirements.txt
 ```
 
-**Also,**
+
+### Webdriver
 Since the crawler uses selenium driver (more specifically, a headless driver), be sure to have firefox or chrome installed
-in your system. You can always change it in the code if you feel like.
+in your system. You can always change it in the code if you feel like.  
+The web drivers should be in the system path like:
+`/usr/bin/`  or `/usr/local/bin/`  
+
+Firefox requires [geckodriver](https://github.com/mozilla/geckodriver). Download the executable to geckodriver and put it in 
+the system path.  
+Similar process might apply for Chrome or Chromium.  
+
+If nothing works out, you can put the path in the constructor [here](https://github.com/NISH1001/medium-crawler/blob/master/link_fetcher.py#L24)  
+(Kind of manual override :D)
+Like:
+```python
+self.driver = webdriver.Chrome(path_to_web_driver)
+```
 
 ## Usage
 The crawler requires username, dump type and the directory where data is to be dumped.  
