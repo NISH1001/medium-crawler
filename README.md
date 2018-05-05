@@ -43,7 +43,7 @@ python mcrawler.py -h
 ```bash
 usage: mcrawler [-h] -u USER -t TYPE -dd DUMP_DIR
 
-Craw shit from medium
+Crawl shit from medium
 
 optional arguments:
   -h, --help            show this help message and exit

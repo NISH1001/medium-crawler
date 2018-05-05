@@ -64,7 +64,7 @@ class MediumCrawler:
 def parse():
     parser = argparse.ArgumentParser(
         "mcrawler",
-        description="Craw shit from medium"
+        description="Crawl shit from medium"
     )
     parser.add_argument(
         '-u',
