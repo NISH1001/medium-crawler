@@ -49,7 +49,7 @@ class LinkFetcher:
                 break
             last_height = new_height
             i += 1
-            self.driver.get_screenshot_as_file("data/screen"+str(i)+".jpg")
+            # self.driver.get_screenshot_as_file("data/screen"+str(i)+".jpg")
         return last_height
 
     def _parse(self, html):
@@ -67,11 +67,29 @@ class LinkFetcher:
                 links.append(anchors[0]['href'])
         return links
 
+    def _parse2(self, html):
+        """
+            The latest function to fetch actual links of this post.
+            Since medium has shifted to react based rendering,
+            there is no actual class name for post.
+            So, here we fetch all the links that match to the pattern:
+                /p/someid/
+        """
+        soup = BeautifulSoup(html, 'html.parser')
+        links = soup.find_all('a', href=re.compile(r'.*/p/.*'))
+        href_list = set()
+        base_url = "https://medium.com{}"
+        for link in links:
+            href = link['href']
+            href_list.add(base_url.format(href))
+        return href_list
+
+
     def get_links(self):
         print("Using driver type :: {}".format(self.driver_type))
         self.driver.get(self.url)
         h = self._scroll_to_oblivion()
-        return self._parse(self.driver.page_source)
+        return self._parse2(self.driver.page_source)
 
 
 def main():
