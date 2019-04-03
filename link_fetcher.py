@@ -36,15 +36,14 @@ class LinkFetcher:
         """
         pause = 3
         last_height = self.driver.execute_script("return document.body.scrollHeight")
-        print(last_height)
         i = 0
-        self.driver.get_screenshot_as_file("data/screen"+str(i)+".jpg")
+        self.driver.get_screenshot_as_file("data/screen"+str(i)+".png")
         while True:
             print("Scrolling...")
             self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(pause)
             new_height = self.driver.execute_script("return document.body.scrollHeight")
-            print("New Height :: {}".format(new_height))
+            # print("New Height :: {}".format(new_height))
             if new_height == last_height:
                 break
             last_height = new_height
@@ -69,7 +68,7 @@ class LinkFetcher:
 
     def _parse2(self, html):
         """
-            The latest function to fetch actual links of this post.
+            The old function to fetch actual links of this post.
             Since medium has shifted to react based rendering,
             there is no actual class name for post.
             So, here we fetch all the links that match to the pattern:
@@ -84,12 +83,33 @@ class LinkFetcher:
             href_list.add(base_url.format(href))
         return href_list
 
+    def _parse3(self, html):
+        """
+            The latest function to fetch actual links of this post.
+            Since medium has shifted to react based rendering,
+            there is no actual class name for post.
+            So, here we fetch all the links that match to the pattern:
+                /@username/post-slag
+        """
+        soup = BeautifulSoup(html, 'html.parser')
+        # links = soup.find_all('a', href=re.compile(r'.*/p/.*'))
+        pattern = r"https://medium.com/@{}/*".format(self.username)
+        links = soup.find_all('a', href=re.compile(pattern))
+        href_list = set()
+        base_url = "{}"
+        for link in links:
+            href = link['href']
+            href_list.add(base_url.format(href).strip())
+        return href_list
+
+
 
     def get_links(self):
         print("Using driver type :: {}".format(self.driver_type))
         self.driver.get(self.url)
         h = self._scroll_to_oblivion()
-        return self._parse2(self.driver.page_source)
+        print("Preparing to fetch available links...")
+        return self._parse3(self.driver.page_source)
 
 
 def main():
