@@ -1,5 +1,5 @@
 # medium-crawler
-A crawler for scraping shit from medium blogs
+A crawler for scraping posts from [Medium](https://medium.com/)
 
 ## Dependencies
 **python3** is required along with **pip3** (mine is **pip** by default).
@@ -43,7 +43,7 @@ python mcrawler.py -h
 ```bash
 usage: mcrawler [-h] -u USER -t TYPE -dd DUMP_DIR
 
-Crawl shit from medium
+Crawl Posts from medium
 
 optional arguments:
   -h, --help            show this help message and exit
