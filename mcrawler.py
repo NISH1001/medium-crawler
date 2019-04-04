@@ -19,6 +19,7 @@ class MediumCrawler:
 
     def __init__(self, username='nishparadox'):
         self.fetcher = LinkFetcher(driver_type='headless', username=username)
+        self.nlinks = 0
 
     def crawl_lazily(self):
         """
@@ -29,7 +30,8 @@ class MediumCrawler:
         links = self.fetcher.get_links()
         # links = ['https://medium.com/@nishparadox/the-sound-of-life-ffb582f060de']
         # links = ['https://medium.com/@nishparadox/who-am-i-ca4442da0d8b']
-        print("Total Number of links :: {}".format(len(links)))
+        self.nlinks = len(links)
+        print("Total Number of links :: {}".format(self.nlinks))
         for link in links:
             print("Getting :: {}".format(link))
             post = self.get_post(link)
@@ -90,12 +92,14 @@ def parse():
     return parser.parse_args()
 
 def run_crawler(username, dump_type, dump_dir):
+    import os
     print("Crawling for user :: {}".format(username))
     crawler = MediumCrawler(username=username)
     dfunc = save_post_as_text if dump_type == 'text' else save_post_as_json
-    create_dir(dump_dir)
+    create_dir(dump_dir, username)
     for post in crawler.crawl_lazily():
-        dfunc(post, dump_dir)
+        dfunc(username, post, dump_dir)
+    print("Dumped {} Posts to {}".format(crawler.nlinks, os.path.join(dump_dir, username)))
 
 def run(args):
     run_crawler(args.user, args.type, args.dump_dir)

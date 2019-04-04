@@ -6,18 +6,19 @@ import os
 import re
 import textwrap
 
-def create_dir(dirname):
-    if not os.path.exists(dirname):
-        os.makedirs(dirname)
+def create_dir(dirname, username):
+    path = os.path.join(dirname, username)
+    if not os.path.exists(path):
+        os.makedirs(path)
 
-def save_post_as_text(post, dir="data"):
-    fname = os.path.join(dir, post['timestamp'] + '-' + re.sub(r'\s+', '-', post['title']))
+def save_post_as_text(username, post, dir="data"):
+    fname = os.path.join(dir, username, post['timestamp'] + '-' + re.sub(r'\s+', '-', post['title']))
     print("Filename :: {}".format(fname))
     with open(fname, 'w') as f:
         f.write(textwrap.fill(post['content'], 140))
 
-def save_post_as_json(post, dir="data"):
-    fname = os.path.join(dir, re.sub(r'\s+', '-', post['title']) + ".json")
+def save_post_as_json(username, post, dir="data"):
+    fname = os.path.join(dir, username, re.sub(r'\s+', '-', post['title']) + ".json")
     print("Filename :: {}".format(fname))
     with open(fname, 'w') as f:
         json.dump(post, f, indent=4)

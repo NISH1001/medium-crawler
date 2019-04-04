@@ -37,7 +37,7 @@ class LinkFetcher:
         pause = 3
         last_height = self.driver.execute_script("return document.body.scrollHeight")
         i = 0
-        self.driver.get_screenshot_as_file("data/screen"+str(i)+".png")
+        # self.driver.get_screenshot_as_file("data/screen"+str(i)+".png")
         while True:
             print("Scrolling...")
             self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
