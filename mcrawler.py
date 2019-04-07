@@ -28,8 +28,6 @@ class MediumCrawler:
         """
         self.posts = []
         links = self.fetcher.get_links()
-        # links = ['https://medium.com/@nishparadox/the-sound-of-life-ffb582f060de']
-        # links = ['https://medium.com/@nishparadox/who-am-i-ca4442da0d8b']
         self.nlinks = len(links)
         print("Total Number of links :: {}".format(self.nlinks))
         for link in links:
@@ -45,7 +43,8 @@ class MediumCrawler:
                 {
                     "title"     :   "...",
                     "timestamp" :   "...",
-                    "content"   :   "..."
+                    "content"   :   "...",
+                    "tags" : [....]
                 }
         """
         response = requests.get(link)
@@ -57,10 +56,13 @@ class MediumCrawler:
         content =' '.join( [ div.get_text(strip=True) for div in divs ])
         content = unicodedata.normalize("NFKD", content)
         time = soup.find('time')['datetime']
+        tag_divs = soup.find('ul', {'class' : 'tags tags--postTags tags--borderless'})
+        tags = [ div.get_text(strip=True) for div in tag_divs ]
         return {
             'title' : title,
             'timestamp' : time,
-            'content' : content
+            'content' : content,
+            'tags' : tags
         }
 
 def parse():
